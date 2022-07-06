@@ -12,8 +12,10 @@ const FBDIDS = {
   "Pflugerville": "1377348",
 };
 
-// The maximum date to search for.
-const MAX_DATE = DateTime.local().plus({ days: 30 });
+const DAYS = parseInt(process.env.MAX_DAYS || "14");
+
+// Maximum number of days to search for.
+const MAX_DAYS = DateTime.local().plus({ days: DAYS });
 
 // Number of milliseconds to wait before calling the USPS API again.
 const SLEEP_TIME = 1000 * 10;
@@ -41,7 +43,7 @@ const findPassportAppointment = async () => {
       for (const response of responses) {
         const { name, data } = response;
         const availableDates = data.dates?.filter(
-          (date) => DateTime.fromFormat(date, "yyyyMMdd") < MAX_DATE
+          (date) => DateTime.fromFormat(date, "yyyyMMdd") < MAX_DAYS
         );
         if (availableDates?.length > 0) {
           console.log(
